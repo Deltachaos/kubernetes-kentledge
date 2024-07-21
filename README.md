@@ -57,9 +57,16 @@ spec:
     name: default-store
   targets:
     - type: mysql
-      url: mysql://user:password@mysql-host:3306/database
+      name: mydatabase1
+      url: mysql://user:password@mysql-host:3306/database1
+    - type: mysql
+      name: mydatabase2
+      url: mysql://user:password@mysql-host:3306/database2
     - type: s3
+      name: mybucket
       url: s3://access-key:secret-key@s3-bucket-name
+    - type: pv
+      name: important-app
     - type: pv
       matchLabel:
         app: important-app
@@ -80,7 +87,7 @@ spec:
     credentials:
       username: borg-user
       password: borg-password
-  storageClass: "default"  # Storage class for temporary volumes, defaults to emptydir
+  storageClass: "default"  # Optional storage class for temporary volumes, defaults to emptydir
   retentionPolicy:
     keepDaily: 7
     keepWeekly: 4
