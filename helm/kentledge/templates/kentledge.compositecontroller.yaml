@@ -6,7 +6,7 @@ spec:
   generateSelector: true
   parentResource:
     apiVersion: kentledge.deltachaos.de/v1alpha1
-    resource: backup
+    resource: backups
   childResources:
     - apiVersion: batch/v1
       resource: cronjobs
