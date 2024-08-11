@@ -26,7 +26,7 @@ class Controller(BaseHTTPRequestHandler):
 
   def sync(self, parent, children):
     desired_status = {
-      "clustersecretstores": len(children["ClusterSecretStore.external-secrets.io/v1beta1"]),
+      "backups": len(children["Backup.kentledge.deltachaos.de/v1alpha1"]),
       "configmaps": len(children["ConfigMap.v1"]),
     }
     desired_resources = []

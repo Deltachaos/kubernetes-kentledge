@@ -50,7 +50,7 @@ Kentledge is installed into your Kubernetes cluster via a Helm chart located in 
 The `Backup` CRD defines the backup schedule and targets. Here's an example manifest:
 
 ```yaml
-apiVersion: kentledge.io/v1alpha1
+apiVersion: kentledge.deltachaos.de/v1alpha1
 kind: Backup
 metadata:
   name: daily-backup
@@ -80,7 +80,7 @@ spec:
 The `ClusterBackupStore` CRD defines the backup storage configuration, including credentials and retention policies. Here's an example manifest:
 
 ```yaml
-apiVersion: kentledge.io/v1alpha1
+apiVersion: kentledge.deltachaos.de/v1alpha1
 kind: ClusterBackupStore
 metadata:
   name: default-store

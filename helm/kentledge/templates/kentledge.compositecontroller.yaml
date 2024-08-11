@@ -1,0 +1,22 @@
+apiVersion: metacontroller.k8s.io/v1alpha1
+kind: CompositeController
+metadata:
+  name: {{ include "kentledge.fullname" . }}
+spec:
+  generateSelector: true
+  parentResource:
+    apiVersion: kentledge.deltachaos.de/v1alpha1
+    resource: backups
+  childResources:
+    - apiVersion: batch/v1
+      resource: cronjobs
+      updateStrategy:
+        method: Recreate
+    - apiVersion: v1
+      resource: configmaps
+      updateStrategy:
+        method: Recreate
+  hooks:
+    sync:
+      webhook:
+        url: http://{{ include "kentledge.fullname" . }}.{{ .Release.Namespace }}/sync
