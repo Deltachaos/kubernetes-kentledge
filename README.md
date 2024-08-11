@@ -27,6 +27,9 @@ Kentledge is a Kubernetes operator designed to facilitate the backup and restore
 
 ## Installation
 
+This project is build using `metacontroller`, and need to have
+[Metacontroller](https://metacontroller.github.io/metacontroller/guide/helm-install.html) installed as well.
+
 Kentledge is installed into your Kubernetes cluster via a Helm chart located in the `helm` subdirectory.
 
 1. **Add the Kentledge Helm repository:**
