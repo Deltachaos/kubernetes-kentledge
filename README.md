@@ -35,7 +35,7 @@ Kentledge is installed into your Kubernetes cluster via a Helm chart located in 
 1. **Add the Kentledge Helm repository:**
     ```sh
     git clone https://github.com/Deltachaos/kubernetes-kentledge.git
-    cd kubernetes-kentledge/helm
+    cd kubernetes-kentledge/helm/kentledge
     ```
 
 2. **Install the Kentledge Helm chart:**
