@@ -31,12 +31,14 @@ def add_job(job):
     global lastjob
     namespace = get_current_namespace()
     configmap_name = os.environ.get('JOBSEQUENCE_RESULT_CONFIGMAP')
+    print("Fetch " + configmap_name)
     v1 = client.CoreV1Api()
 
     job["restartPolicy"] = "Never"
     job["serviceAccountName"] = get_serviceaccount_name()
 
     configmap = v1.read_namespaced_config_map(name=configmap_name, namespace=namespace)
+    print(configmap)
 
     data = configmap.data()
     data["job-" + str(lastjob) + ".yaml"] = json.dumps({"spec": {"template": {"spec": job}}})
