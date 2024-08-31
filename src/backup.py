@@ -22,12 +22,6 @@ def get_own_pod():
 
     return v1.read_namespaced_pod(name=pod_name, namespace=namespace)
 
-def get_serviceaccount_name():
-    pod = get_own_pod()
-
-    serviceaccount_name = pod.spec.service_account_name
-    return serviceaccount_name
-
 lastjob = 0
 def add_job(job):
     global lastjob
@@ -36,15 +30,12 @@ def add_job(job):
     print("Fetch " + configmap_name)
     v1 = client.CoreV1Api()
 
-    job["restartPolicy"] = "Never"
-    job["serviceAccountName"] = get_serviceaccount_name()
-
     configmap = v1.read_namespaced_config_map(name=configmap_name, namespace=namespace)
 
     if configmap.data == None:
         configmap.data = {}
 
-    configmap.data["job-" + str(lastjob) + ".yaml"] = json.dumps({"spec": {"template": {"spec": job}}})
+    configmap.data["job-" + str(lastjob) + ".yaml"] = json.dumps(job)
     v1.patch_namespaced_config_map(name=configmap_name, namespace=namespace, body=configmap)
     lastjob = lastjob + 1
 
@@ -54,14 +45,22 @@ def add_backup_job(arg):
     container = pod.spec.containers[0]
 
     add_job({
-        "containers": [
-            {
-                "name": container.name,
-                "imagePullPolicy": container.image_pull_policy,
-                "image": container.image,
-                "args": ["python", "backup.py", arg]
+        "spec": {
+            "template": {
+                "spec": {
+                    "restartPolicy": "Never",
+                    "serviceAccountName": pod.spec.service_account_name,
+                    "containers": [
+                        {
+                            "name": container.name,
+                            "imagePullPolicy": container.image_pull_policy,
+                            "image": container.image,
+                            "args": ["python", "backup.py", arg]
+                        }
+                    ]
+                }
             }
-        ]
+        }
     })
 
 if len( sys.argv ) > 1:
