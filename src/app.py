@@ -23,10 +23,42 @@ class Controller(BaseHTTPRequestHandler):
     clusterRoleBinding = parent["metadata"]["namespace"] + "-" + serviceAccountName
 
     desired_status = {
+      "clusterrolebindings": len(children["ClusterRoleBinding.rbac.authorization.k8s.io/v1"]),
+      "serviceaccounts": len(children["ServiceAccount.v1"]),
       "configmaps": len(children["ConfigMap.v1"]),
       "cronjobs": len(children["CronJob.batch/v1"]),
     }
     desired_resources = [
+        {
+          "apiVersion": "v1",
+          "kind": "ServiceAccount",
+          "metadata": {
+            "name": serviceAccountName,
+            "namespace": namespace
+          },
+          "data": {
+            "automountServiceAccountToken": True
+          }
+        },
+        {
+          "apiVersion": "rbac.authorization.k8s.io/v1",
+          "kind": "ClusterRoleBinding",
+          "metadata": {
+            "name": clusterRoleBinding,
+          },
+          "roleRef": {
+            "apiGroup": "rbac.authorization.k8s.io",
+            "kind": "ClusterRole",
+            "name": clusterRole
+          },
+          "subjects": [
+            {
+              "kind": "ServiceAccount",
+              "name": serviceAccountName,
+              "namespace": namespace
+            }
+          ]
+        },
         {
           "apiVersion": "batch/v1",
           "kind": "CronJob",
