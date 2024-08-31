@@ -36,9 +36,9 @@ class Controller(BaseHTTPRequestHandler):
           },
           "spec": {
             "schedule": parent["spec"]["schedule"],
-            "backoffLimit": 1,
             "jobTemplate": {
               "spec": {
+                "backoffLimit": 1,
                 "template": {
                   "spec": {
                     "serviceAccountName": serviceAccountName,
