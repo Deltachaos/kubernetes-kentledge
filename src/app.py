@@ -50,7 +50,7 @@ class Controller(BaseHTTPRequestHandler):
     jobConfigs = {}
     i = 0
     for job in jobs:
-      jobConfigs["job-" + i] = json.dumps({"spec": {"template": {"spec": job}}})
+      jobConfigs["job-" + str(i) + ".yaml"] = json.dumps({"spec": {"template": {"spec": job}}})
       i = i + 1
 
     desired_status = {
