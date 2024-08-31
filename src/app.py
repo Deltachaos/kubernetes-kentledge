@@ -36,9 +36,7 @@ class Controller(BaseHTTPRequestHandler):
             "name": serviceAccountName,
             "namespace": namespace
           },
-          "data": {
-            "automountServiceAccountToken": True
-          }
+          "automountServiceAccountToken": True
         },
         {
           "apiVersion": "rbac.authorization.k8s.io/v1",
