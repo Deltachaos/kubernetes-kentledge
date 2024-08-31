@@ -7,12 +7,10 @@ import kubernetes
 from io import StringIO
 import os
 import re
-import pprint
 
 class Controller(BaseHTTPRequestHandler):
   def dump(self, obj):
-    self.log_message("%s", , "this is a test")
-    self.log_message("%s", pprint.pformat(obj, indent=4))
+    self.log_message("%s", json.dumps(obj, indent=2))
 
   def sync(self, parent, children):
 
