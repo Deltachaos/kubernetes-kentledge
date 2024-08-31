@@ -47,6 +47,9 @@ class Controller(BaseHTTPRequestHandler):
             "name": clusterRoleBinding,
           },
           "roleRef": {
+            "apiGroup": "rbac.authorization.k8s.io",
+            "kind": "ClusterRole",
+            "name": clusterRole
           },
           "subjects": [
             {
@@ -55,18 +58,6 @@ class Controller(BaseHTTPRequestHandler):
               "namespace": namespace
             }
           ]
-        },
-        {
-          "apiVersion": "v1",
-          "kind": "ConfigMap",
-          "metadata": {
-            "name": configMapName,
-            "namespace": namespace
-          },
-          "data": {
-            "job1.yaml": "spec:\n  template:\n    spec:\n      restartPolicy: Never\n      containers:\n        - name: sleep-container\n          image: busybox\n          command: [\"sleep\", \"10\"]\n",
-            "job2.yaml": "spec:\n  template:\n    spec:\n      restartPolicy: Never\n      containers:\n        - name: sleep-container\n          image: busybox\n          command: [\"sleep\", \"20\"]\n"
-          }
         },
         {
           "apiVersion": "batch/v1",
@@ -109,6 +100,18 @@ class Controller(BaseHTTPRequestHandler):
                 }
               }
             }
+          }
+        },
+        {
+          "apiVersion": "v1",
+          "kind": "ConfigMap",
+          "metadata": {
+            "name": configMapName,
+            "namespace": namespace
+          },
+          "data": {
+            "job1.yaml": "spec:\n  template:\n    spec:\n      restartPolicy: Never\n      containers:\n        - name: sleep-container\n          image: busybox\n          command: [\"sleep\", \"10\"]\n",
+            "job2.yaml": "spec:\n  template:\n    spec:\n      restartPolicy: Never\n      containers:\n        - name: sleep-container\n          image: busybox\n          command: [\"sleep\", \"20\"]\n"
           }
         }
     ]
