@@ -9,34 +9,77 @@ import os
 import re
 
 class Controller(BaseHTTPRequestHandler):
-  def matchesFilter(self, cluster, namespace):
-    namespaceFilter = json.loads(os.environ['NAMESPACES'])
-
-    for clusterFilter in namespaceFilter:
-        patternCluster = re.compile(clusterFilter["clusterName"])
-        if patternCluster.match(cluster):
-            for filter in clusterFilter["namespaces"]:
-                patternNamespace = re.compile(filter)
-                if patternNamespace.match(namespace):
-                    return True
-
-            return False
-
-    return False
-
   def sync(self, parent, children):
+
+    serviceAccountName = "kentledge" # TODO change
+
     desired_status = {
-      "backups": len(children["Backup.kentledge.deltachaos.de/v1alpha1"]),
       "configmaps": len(children["ConfigMap.v1"]),
+      "cronjobs": len(children["CronJob.batch/v1"]),
     }
-    desired_resources = []
+    desired_resources = [
+        {
+          "apiVersion": "v1",
+          "kind": "ConfigMap",
+          "metadata": {
+            "name": parent["metadata"]["name"],
+            "namespace": parent["metadata"]["namespace"]
+          },
+          "data": {
+            "job1.yaml": "spec:\n  template:\n    spec:\n      restartPolicy: Never\n      containers:\n        - name: sleep-container\n          image: busybox\n          command: [\"sleep\", \"10\"]\n",
+            "job2.yaml": "spec:\n  template:\n    spec:\n      restartPolicy: Never\n      containers:\n        - name: sleep-container\n          image: busybox\n          command: [\"sleep\", \"20\"]\n"
+          }
+        },
+        {
+          "apiVersion": "batch/v1",
+          "kind": "CronJob",
+          "metadata": {
+            "name": parent["metadata"]["name"],
+            "namespace": parent["metadata"]["namespace"]
+          },
+          "spec": {
+            "schedule": parent["spec"]["schedule"],
+            "jobTemplate": {
+              "spec": {
+                "template": {
+                  "spec": {
+                    "serviceAccountName": serviceAccountName,
+                    "volumes": [
+                      {
+                        "name": "jobs",
+                        "configMap": {
+                          "name": parent["metadata"]["name"]
+                        }
+                      }
+                    ],
+                    "containers": [
+                      {
+                        "name": "runner",
+                        "imagePullPolicy": "Always",
+                        "image": "ghcr.io/deltachaos/kubernetes-jobsequence:main",
+                        "volumeMounts": [
+                          {
+                            "name": "jobs",
+                            "mountPath": "/jobs"
+                          }
+                        ]
+                      }
+                    ],
+                    "restartPolicy": "Never"
+                  }
+                }
+              }
+            }
+          }
+        }
+    ]
 
     return {"status": desired_status, "attachments": desired_resources}
 
   def do_POST(self):
     observed = json.loads(self.rfile.read(int(self.headers.get("content-length"))))
     print(observed)
-    desired = self.sync(observed["object"], observed["attachments"])
+    desired = self.sync(observed["parent"], observed["children"])
     print("desired")
     print(desired)
 
