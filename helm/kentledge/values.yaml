@@ -10,6 +10,11 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: main
 
+jobsequenceImage:
+  repository: ghcr.io/deltachaos/kubernetes-jobsequence
+  pullPolicy: Always
+  tag: main
+
 rbac:
   create: true
 

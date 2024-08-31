@@ -15,6 +15,10 @@ class Controller(BaseHTTPRequestHandler):
   def sync(self, parent, children):
 
     clusterRole = os.environ.get("KUBERNETES_CLUSTERROLE")
+    kentledgeImage = os.environ.get("KENTLEDGE_IMAGE")
+    kentledgePullPolicy = os.environ.get("KENTLEDGE_PULLPOLICY")
+    jobsequenceImage = os.environ.get("JOBSEQUENCE_IMAGE")
+    jobsequencePullPolicy = os.environ.get("JOBSEQUENCE_PULLPOLICY")
 
     configMapName = parent["metadata"]["name"]
     serviceAccountName = parent["metadata"]["name"]
@@ -29,19 +33,9 @@ class Controller(BaseHTTPRequestHandler):
         "containers": [
           {
             "name": "runner",
-            "image": "busybox",
-            "command": ["sleep", "10"]
-          }
-        ]
-      },
-      {
-        "restartPolicy": "Never",
-        "serviceAccountName": serviceAccountName,
-        "containers": [
-          {
-            "name": "runner",
-            "image": "busybox",
-            "command": ["sleep", "10"]
+            "imagePullPolicy": kentledgePullPolicy,
+            "image": kentledgeImage,
+            "args": ["python", "backup.py"]
           }
         ]
       }
@@ -114,8 +108,8 @@ class Controller(BaseHTTPRequestHandler):
                     "containers": [
                       {
                         "name": "runner",
-                        "imagePullPolicy": "Always",
-                        "image": "ghcr.io/deltachaos/kubernetes-jobsequence:main",
+                        "imagePullPolicy": jobsequencePullPolicy,
+                        "image": jobsequenceImage,
                         "volumeMounts": [
                           {
                             "name": "jobs",

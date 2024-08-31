@@ -39,6 +39,14 @@ spec:
           env:
             - name: KUBERNETES_CLUSTERROLE
               value: {{ template "kentledge.fullname" . }}
+            - name: KENTLEDGE_IMAGE
+              value: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            - name: KENTLEDGE_PULLPOLICY
+              value: {{ .Values.image.pullPolicy }}
+            - name: JOBSEQUENCE_IMAGE
+              value: "{{ .Values.jobsequenceImage.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            - name: JOBSEQUENCE_PULLPOLICY
+              value: {{ .Values.jobsequenceImage.pullPolicy }}
           ports:
             - name: http
               containerPort: 8080
