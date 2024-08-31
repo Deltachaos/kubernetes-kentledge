@@ -1,6 +1,7 @@
 import time
 import os
 import json
+import sys
 from kubernetes import client, config
 
 config.load_incluster_config()
@@ -13,15 +14,16 @@ def get_current_namespace():
 def get_current_pod_name():
     return os.getenv("HOSTNAME")
 
-def get_serviceaccount_name():
-    config.load_incluster_config()
-
+def get_own_pod():
     v1 = client.CoreV1Api()
 
     pod_name = get_current_pod_name()
     namespace = get_current_namespace()
 
-    pod = v1.read_namespaced_pod(name=pod_name, namespace=namespace)
+    return v1.read_namespaced_pod(name=pod_name, namespace=namespace)
+
+def get_serviceaccount_name():
+    pod = get_own_pod()
 
     serviceaccount_name = pod.spec.service_account_name
     return serviceaccount_name
@@ -46,25 +48,23 @@ def add_job(job):
     v1.patch_namespaced_config_map(name=configmap_name, namespace=namespace, body=configmap)
     lastjob = lastjob + 1
 
-print("hallo test")
-time.sleep(3)
-print("hallo test ende")
-time.sleep(10)
-add_job({
-    "containers": [
-      {
-        "name": "runner",
-        "image": "busybox",
-        "cmd": ["/bin/sleep", "10"]
-      }
-    ]
-})
-add_job({
-    "containers": [
-      {
-        "name": "runner",
-        "image": "busybox",
-        "cmd": ["/bin/sleep", "20"]
-      }
-    ]
-})
+def add_backup_job(arg):
+    pod = get_own_pod()
+
+    container = pod.spec.containers[0]
+    container["cmd"] = ["python", "backup.py", arg]
+
+    add_job({
+        "containers": [container]
+    })
+
+if len( sys.argv ) > 1:
+    time.sleep(5)
+    print("some args")
+    time.sleep(30)
+    print("done")
+else:
+    print("hallo test")
+    print("hallo test ende")
+
+    add_backup_job("something")
