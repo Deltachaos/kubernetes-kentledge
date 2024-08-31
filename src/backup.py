@@ -59,3 +59,12 @@ add_job({
       }
     ]
 })
+add_job({
+    "containers": [
+      {
+        "name": "runner",
+        "image": "busybox",
+        "cmd": ["/bin/sleep", "20"]
+      }
+    ]
+})
