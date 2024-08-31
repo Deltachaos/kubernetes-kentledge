@@ -51,7 +51,7 @@ def add_job(job):
 def add_backup_job(arg):
     pod = get_own_pod()
 
-    container = pod.spec.containers[0]
+    container = json.loads(json.dumps(pod.spec.containers[0]))
     container["cmd"] = ["python", "backup.py", arg]
 
     add_job({
