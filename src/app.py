@@ -77,7 +77,7 @@ class Controller(BaseHTTPRequestHandler):
         }
     ]
 
-    return {"status": desired_status, "attachments": desired_resources}
+    return {"status": desired_status, "children": desired_resources}
 
   def do_POST(self):
     observed = json.loads(self.rfile.read(int(self.headers.get("content-length"))))
