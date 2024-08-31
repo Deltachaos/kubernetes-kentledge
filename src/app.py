@@ -14,7 +14,7 @@ class Controller(BaseHTTPRequestHandler):
 
   def sync(self, parent, children):
 
-    serviceAccountName = "kentledge" # TODO change
+    serviceAccountName = os.environ.get('KUBERNETES_SERVICEACCOUNT')
 
     desired_status = {
       "configmaps": len(children["ConfigMap.v1"]),

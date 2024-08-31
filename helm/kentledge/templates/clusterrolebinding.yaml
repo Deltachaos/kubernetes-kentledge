@@ -6,9 +6,9 @@ metadata:
   labels:
 {{ include "kentledge.labels" . | indent 4 }}
 roleRef:
-  apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "kentledge.fullname" . }}
+  name: admin
+  apiGroup: rbac.authorization.k8s.io
 subjects:
   - kind: ServiceAccount
     name: {{ template "kentledge.serviceAccountName" . }}
