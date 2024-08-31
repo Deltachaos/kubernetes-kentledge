@@ -51,11 +51,17 @@ def add_job(job):
 def add_backup_job(arg):
     pod = get_own_pod()
 
-    container = json.loads(json.dumps(pod.spec.containers[0]))
-    container["cmd"] = ["python", "backup.py", arg]
+    container = pod.spec.containers[0]
 
     add_job({
-        "containers": [container]
+        "containers": [
+            {
+                "name": container.name,
+                "imagePullPolicy": container.imagePullPolicy,
+                "image": container.image,
+                "cmd": ["python", "backup.py", arg]
+            }
+        ]
     })
 
 if len( sys.argv ) > 1:
