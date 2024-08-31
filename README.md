@@ -20,8 +20,10 @@ Kentledge is a Kubernetes operator designed to facilitate the backup and restore
 
 - [x] Write README with planned features :D
 - [ ] Support basic backup functionality
-- [ ] Support ReadWriteMany volumes
-- [ ] Support ReadWriteOnce volumes
+- [ ] Support backup of ReadWriteMany volumes
+- [ ] Support backup of ReadWriteOnce volumes
+- [ ] Support restore
+- [ ] Support pre- and postrestore/backup hooks
 - [ ] Support MySQL backup
 - [ ] Support S3 backup
 

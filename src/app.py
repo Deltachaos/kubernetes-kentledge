@@ -11,7 +11,7 @@ import pprint
 
 class Controller(BaseHTTPRequestHandler):
   def dump(self, obj):
-    self.log_message("{}", pprint.pformat(obj, indent=4))
+    self.log_message("{0}", pprint.pformat(obj, indent=4))
 
   def sync(self, parent, children):
 
