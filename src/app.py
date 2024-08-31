@@ -37,7 +37,7 @@ class Controller(BaseHTTPRequestHandler):
             "namespace": namespace
           },
           "data": {
-            "automountServiceAccountToken": true
+            "automountServiceAccountToken": True
           }
         },
         {
