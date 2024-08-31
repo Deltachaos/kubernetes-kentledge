@@ -7,8 +7,12 @@ import kubernetes
 from io import StringIO
 import os
 import re
+import pprint
 
 class Controller(BaseHTTPRequestHandler):
+  def dump(self, obj):
+    self.log_message("{}", pprint.pformat(obj, indent=4))
+
   def sync(self, parent, children):
 
     serviceAccountName = "kentledge" # TODO change
@@ -78,10 +82,9 @@ class Controller(BaseHTTPRequestHandler):
 
   def do_POST(self):
     observed = json.loads(self.rfile.read(int(self.headers.get("content-length"))))
-    self.log_message("{}", observed)
+    self.dump(observed)
     desired = self.sync(observed["parent"], observed["children"])
-    self.log_message("{}", "desired")
-    self.log_message("{}", desired)
+    self.dump(desired)
 
     self.send_response(200)
     self.send_header("Content-type", "application/json")
