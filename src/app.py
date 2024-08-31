@@ -23,22 +23,10 @@ class Controller(BaseHTTPRequestHandler):
     clusterRoleBinding = parent["metadata"]["namespace"] + "-" + serviceAccountName
 
     desired_status = {
-      "serviceaccounts": len(children["ServiceAccount.v1"]),
       "configmaps": len(children["ConfigMap.v1"]),
       "cronjobs": len(children["CronJob.batch/v1"]),
     }
     desired_resources = [
-        {
-          "apiVersion": "v1",
-          "kind": "ServiceAccount",
-          "metadata": {
-            "name": serviceAccountName,
-            "namespace": namespace
-          },
-          "data": {
-            "automountServiceAccountToken": True
-          }
-        },
         {
           "apiVersion": "batch/v1",
           "kind": "CronJob",

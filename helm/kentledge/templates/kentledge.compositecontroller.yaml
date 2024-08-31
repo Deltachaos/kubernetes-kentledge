@@ -16,10 +16,6 @@ spec:
       resource: configmaps
       updateStrategy:
         method: Recreate
-    - apiVersion: v1
-      resource: serviceaccounts
-      updateStrategy:
-        method: OnDelete
   hooks:
     sync:
       webhook:
