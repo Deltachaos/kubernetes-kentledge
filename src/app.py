@@ -10,7 +10,7 @@ import re
 
 class Controller(BaseHTTPRequestHandler):
   def dump(self, obj):
-    self.log_message("%s", json.dumps(obj, indent=2))
+    self.log_message("%s", json.dumps(obj))
 
   def sync(self, parent, children):
 
