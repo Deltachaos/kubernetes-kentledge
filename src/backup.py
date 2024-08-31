@@ -59,7 +59,7 @@ def add_backup_job(arg):
                 "name": container.name,
                 "imagePullPolicy": container.image_pull_policy,
                 "image": container.image,
-                "cmd": ["python", "backup.py", arg]
+                "args": ["python", "backup.py", arg]
             }
         ]
     })
