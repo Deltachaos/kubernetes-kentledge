@@ -37,6 +37,10 @@ def add_job(job):
     job["serviceAccountName"] = get_serviceaccount_name()
 
     configmap = v1.read_namespaced_config_map(name=configmap_name, namespace=namespace)
+
+    if "data" not in configmap:
+        configmap["data"] = {}
+
     configmap.data["job-" + str(lastjob) + ".yaml"] = json.dumps({"spec": {"template": {"spec": job}}})
     v1.patch_namespaced_config_map(name=configmap_name, namespace=namespace, body=configmap)
     lastjob = lastjob + 1
