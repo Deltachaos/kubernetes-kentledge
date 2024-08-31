@@ -19,7 +19,11 @@ spec:
     - apiVersion: v1
       resource: serviceaccounts
       updateStrategy:
-        method: Recreate
+        method: OnDelete
+    - apiVersion: rbac.authorization.k8s.io/v1
+      resource: clusterrolebindings
+      updateStrategy:
+        method: OnDelete
   hooks:
     sync:
       webhook:
