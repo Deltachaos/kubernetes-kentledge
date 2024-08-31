@@ -14,19 +14,54 @@ class Controller(BaseHTTPRequestHandler):
 
   def sync(self, parent, children):
 
-    serviceAccountName = os.environ.get('KUBERNETES_SERVICEACCOUNT')
+    clusterRole = os.environ.get("KUBERNETES_CLUSTERROLE")
+
+    configMapName = parent["metadata"]["name"]
+    serviceAccountName = parent["metadata"]["name"]
+    cronJobName = parent["metadata"]["name"]
+    namespace = parent["metadata"]["namespace"]
+    clusterRoleBinding = parent["metadata"]["namespace"] + "-" + serviceAccountName
 
     desired_status = {
+      "clusterrolebindings": len(children["ClusterRoleBinding.rbac.authorization.k8s.io/v1"]),
+      "serviceaccounts": len(children["ServiceAccount.v1"]),
       "configmaps": len(children["ConfigMap.v1"]),
       "cronjobs": len(children["CronJob.batch/v1"]),
     }
     desired_resources = [
         {
           "apiVersion": "v1",
+          "kind": "ServiceAccount",
+          "metadata": {
+            "name": serviceAccountName,
+            "namespace": namespace
+          },
+          "data": {
+            "automountServiceAccountToken": true
+          }
+        },
+        {
+          "apiVersion": "rbac.authorization.k8s.io/v1",
+          "kind": "ClusterRoleBinding",
+          "metadata": {
+            "name": clusterRoleBinding,
+          },
+          "roleRef": {
+          },
+          "subjects": [
+            {
+              "kind": "ServiceAccount",
+              "name": serviceAccountName,
+              "namespace": namespace
+            }
+          ]
+        },
+        {
+          "apiVersion": "v1",
           "kind": "ConfigMap",
           "metadata": {
-            "name": parent["metadata"]["name"],
-            "namespace": parent["metadata"]["namespace"]
+            "name": configMapName,
+            "namespace": namespace
           },
           "data": {
             "job1.yaml": "spec:\n  template:\n    spec:\n      restartPolicy: Never\n      containers:\n        - name: sleep-container\n          image: busybox\n          command: [\"sleep\", \"10\"]\n",
@@ -37,11 +72,12 @@ class Controller(BaseHTTPRequestHandler):
           "apiVersion": "batch/v1",
           "kind": "CronJob",
           "metadata": {
-            "name": parent["metadata"]["name"],
-            "namespace": parent["metadata"]["namespace"]
+            "name": cronJobName,
+            "namespace": namespace
           },
           "spec": {
             "schedule": parent["spec"]["schedule"],
+            "backoffLimit": 1,
             "jobTemplate": {
               "spec": {
                 "template": {
@@ -51,7 +87,7 @@ class Controller(BaseHTTPRequestHandler):
                       {
                         "name": "jobs",
                         "configMap": {
-                          "name": parent["metadata"]["name"]
+                          "name": configMapName
                         }
                       }
                     ],
