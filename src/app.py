@@ -78,9 +78,9 @@ class Controller(BaseHTTPRequestHandler):
 
   def do_POST(self):
     observed = json.loads(self.rfile.read(int(self.headers.get("content-length"))))
-    print(observed)
+    self.log_message(observed)
     desired = self.sync(observed["parent"], observed["children"])
-    print("desired")
+    self.log_message("desired")
     print(desired)
 
     self.send_response(200)
