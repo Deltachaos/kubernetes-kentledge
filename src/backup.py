@@ -40,10 +40,6 @@ def add_job(job):
     v1.patch_namespaced_config_map(name=configmap_name, namespace=namespace, body=configmap)
     lastjob = lastjob + 1
 
-update_configmap(namespace, configmap_name, new_data)
-
-v1 = client.CoreV1Api()
-
 print("hallo test")
 time.sleep(3)
 print("hallo test ende")
