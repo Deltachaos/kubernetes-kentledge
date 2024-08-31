@@ -28,6 +28,7 @@ def get_serviceaccount_name():
 
 lastjob = 0
 def add_job(job):
+    global lastjob
     namespace = get_current_namespace()
     configmap_name = os.environ.get('JOBSEQUENCE_RESULT_CONFIGMAP')
     v1 = client.CoreV1Api()
