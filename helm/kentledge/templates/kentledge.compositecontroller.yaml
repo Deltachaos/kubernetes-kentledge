@@ -20,10 +20,6 @@ spec:
       resource: serviceaccounts
       updateStrategy:
         method: Recreate
-    - apiVersion: rbac.authorization.k8s.io/v1
-      resource: clusterrolebindings
-      updateStrategy:
-        method: Recreate
   hooks:
     sync:
       webhook:
