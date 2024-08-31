@@ -22,6 +22,37 @@ class Controller(BaseHTTPRequestHandler):
     namespace = parent["metadata"]["namespace"]
     clusterRoleBinding = parent["metadata"]["namespace"] + "-" + serviceAccountName
 
+    jobs = [
+      {
+        "restartPolicy": "Never",
+        "serviceAccountName": serviceAccountName,
+        "containers": [
+          {
+            "name": "runner",
+            "image": "busybox",
+            "command": ["sleep", "10"]
+          }
+        ]
+      },
+      {
+        "restartPolicy": "Never",
+        "serviceAccountName": serviceAccountName,
+        "containers": [
+          {
+            "name": "runner",
+            "image": "busybox",
+            "command": ["sleep", "10"]
+          }
+        ]
+      }
+    ]
+
+    jobConfigs = {}
+    i = 0
+    for job in jobs:
+      jobConfigs["job-" + i] = json.dumps({"spec": {"template": {"spec": job}}})
+      i = i + 1
+
     desired_status = {
       "clusterrolebindings": len(children["ClusterRoleBinding.rbac.authorization.k8s.io/v1"]),
       "serviceaccounts": len(children["ServiceAccount.v1"]),
@@ -107,10 +138,7 @@ class Controller(BaseHTTPRequestHandler):
             "name": configMapName,
             "namespace": namespace
           },
-          "data": {
-            "job1.yaml": "spec:\n  template:\n    spec:\n      restartPolicy: Never\n      containers:\n        - name: sleep-container\n          image: busybox\n          command: [\"sleep\", \"10\"]\n",
-            "job2.yaml": "spec:\n  template:\n    spec:\n      restartPolicy: Never\n      containers:\n        - name: sleep-container\n          image: busybox\n          command: [\"sleep\", \"20\"]\n"
-          }
+          "data": jobConfigs
         }
     ]
 
