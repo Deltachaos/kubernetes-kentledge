@@ -35,7 +35,13 @@ class Controller(BaseHTTPRequestHandler):
             "name": "runner",
             "imagePullPolicy": kentledgePullPolicy,
             "image": kentledgeImage,
-            "args": ["python", "backup.py"]
+            "args": ["python", "backup.py"],
+            "env": [
+              {
+                "name": "KENTLEDGE_BACKUP",
+                "value": json.dumps(parent)
+              }
+            ]
           }
         ]
       }

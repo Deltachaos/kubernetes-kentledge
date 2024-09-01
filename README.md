@@ -70,9 +70,9 @@ spec:
     - type: s3
       name: mybucket
       url: s3://access-key:secret-key@s3-bucket-name
-    - type: pv
+    - type: pvc
       name: important-app
-    - type: pv
+    - type: pvc
       matchLabel:
         app: important-app
 ```
