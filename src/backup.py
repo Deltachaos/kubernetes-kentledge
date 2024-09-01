@@ -14,10 +14,10 @@ class TargetResolver:
         self.backup_config = backup_config
         self.storage_config = storage_config
 
-    def find_pvcs_by_labels(self, labels)
+    def find_pvcs_by_labels(self, labels):
         return [] # TODO implement
 
-    def get_pvc(self, namespace, pvc_name)
+    def get_pvc(self, namespace, pvc_name):
         v1 = client.CoreV1Api()
         pvc = v1.read_namespaced_persistent_volume_claim(name=pvc_name, namespace=namespace)
 
