@@ -142,7 +142,7 @@ class Kentledge:
         return self.get_cluster_storage(name)
 
     def target_resolver(self):
-        return self._handler = TargetResolver(get_backup_config(), get_cluster_storage())
+        return TargetResolver(get_backup_config(), get_cluster_storage())
 
 
 k = Kentledge()
