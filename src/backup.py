@@ -148,8 +148,8 @@ class Kentledge:
 k = Kentledge()
 
 if len( sys.argv ) <= 1:
-    #for target in k.target_resolver().targets():
-    #    print(target)
+    for target in k.target_resolver().targets():
+        print(target)
     print("Sleep")
     time.sleep(10)
 else:
