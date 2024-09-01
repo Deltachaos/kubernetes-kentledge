@@ -136,13 +136,13 @@ class Kentledge:
     def get_backup_config(self):
         return json.loads(os.environ.get("KENTLEDGE_BACKUP"))
 
-    def get_cluster_storage(self):
+    def get_cluster_storage_name(self):
         backup_config = self.get_backup_config()
         name = backup_config["spec"]["clusterBackupStore"]["name"]
         return self.get_cluster_storage(name)
 
     def target_resolver(self):
-        return TargetResolver(self.get_backup_config(), self.get_cluster_storage())
+        return TargetResolver(self.get_backup_config(), self.get_cluster_storage_name())
 
 
 k = Kentledge()
