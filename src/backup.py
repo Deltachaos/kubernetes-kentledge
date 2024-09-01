@@ -43,7 +43,7 @@ class TargetResolver:
         for target in self.backup_config["targets"]:
             if 'url' in target:
                 result.append(target)
-            else if target["type"] == 'pvc':
+            elif target["type"] == 'pvc':
                 if 'name' in target:
                     info = get_info(get_current_namespace(), target["name"])
                     result.append({
@@ -54,7 +54,7 @@ class TargetResolver:
                        pv: info["pv"],
                        pods: info["pods"]
                     })
-                else if 'matchLabel' in target:
+                elif 'matchLabel' in target:
                     for pvc in self.find_pvcs_by_labels(target["matchLabel"]):
                         info = get_info(get_current_namespace(), pvc)
                         result.append({
