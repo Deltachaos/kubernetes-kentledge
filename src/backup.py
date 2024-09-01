@@ -40,7 +40,7 @@ class TargetResolver:
 
     def targets(self):
         result = []
-        for target in self.backup_config["targets"]:
+        for target in self.backup_config["spec"]["targets"]:
             if 'url' in target:
                 result.append(target)
             elif target["type"] == 'pvc':
@@ -138,7 +138,7 @@ class Kentledge:
 
     def get_cluster_storage(self):
         backup_config = self.get_backup_config()
-        name = backup_config["clusterBackupStore"]["name"]
+        name = backup_config["spec"]["clusterBackupStore"]["name"]
         return self.get_cluster_storage(name)
 
     def target_resolver(self):
